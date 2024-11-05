@@ -1,0 +1,1 @@
+chrome.runtime.onMessage.addListener((function(e,n,d){var t=document.createElement("img");t.src=e,document.body.appendChild(t)}));
