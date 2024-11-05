@@ -1,4 +1,4 @@
-# brewed-in-chaos
+# infinite-loopers
 
 AI Emotional Intelligence Assistant Chrome Extension by ---> Team Infinite Loopers
 This project was created by React and Chrome’s built-in AI APIs and models, including Gemini Nano. \
