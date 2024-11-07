@@ -1,0 +1,39 @@
+/* src/styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main-box {
+    @apply bg-white text-2xl border-2 border-gray-300 shadow-sm p-12 min-w-[200px] rounded-xl;
+}
+
+/* Base class for the card */
+.tone-card {
+    @apply text-white font-semibold text-lg rounded-lg shadow-lg p-6 flex items-center justify-center;
+  }
+  
+  /* Color variants for different tones */
+  .tone-card-purple {
+    @apply bg-gradient-to-r from-purple-500 to-purple-700;
+  }
+  
+  .tone-card-orange {
+    @apply bg-gradient-to-r from-orange-400 to-orange-600;
+  }
+  
+  .tone-card-pink {
+    @apply bg-gradient-to-r from-pink-500 to-pink-700;
+  }
+  
+  .tone-card-blue {
+    @apply bg-gradient-to-r from-blue-400 to-blue-600;
+  }
+  
+  .tone-card-yellow {
+    @apply bg-gradient-to-r from-yellow-400 to-yellow-600;
+  }
+  
+  .tone-card-green {
+    @apply bg-gradient-to-r from-green-400 to-green-600;
+  }
+  

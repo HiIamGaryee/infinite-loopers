@@ -1,7 +1,7 @@
 // webpack.config.cjs
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin"); // Add this line
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: "production",
@@ -9,7 +9,7 @@ module.exports = {
   entry: {
     contentScript: "./src/content/index.ts",
     background: "./src/background/index.ts",
-    react: "./src/react/index.tsx", // Ensure the correct entry point
+    react: "./src/react/index.tsx",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -20,12 +20,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./src/index.html",
       filename: "index.html",
-      chunks: ["react"], // Specify which chunks to include
+      chunks: ["react"],
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: path.resolve(__dirname, "manifest.json"), // Corrected path and filename
+          from: path.resolve(__dirname, "manifest.json"),
           to: path.resolve(__dirname, "dist"),
         },
       ],
@@ -41,20 +41,30 @@ module.exports = {
           options: {
             presets: [
               "@babel/preset-env",
-              [
-                "@babel/preset-react",
-                {
-                  runtime: "automatic",
-                },
-              ],
+              ["@babel/preset-react", { runtime: "automatic" }],
               "@babel/preset-typescript",
             ],
           },
         },
       },
+      {
+        test: /\.css$/,
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [require("tailwindcss"), require("autoprefixer")],
+              },
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx"], // Added .js and .jsx
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
 };
