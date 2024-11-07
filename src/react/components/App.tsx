@@ -13,6 +13,7 @@ const App = () => {
   return (
     <main>
       <h1>Add a Dog Gif to Webpage</h1>
+      <h1>Add a Dog Gif to Webpage</h1>
       <img src={dogSrc} />
       <button onClick={generateDogGif}>Generate Dog Gif</button>
     </main>

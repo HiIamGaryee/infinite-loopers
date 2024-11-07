@@ -9,7 +9,7 @@ Demo: coming soon
 
 In the project directory, you can run:
 
-### `npm run dev`
+### `npm run build`
 
 Builds the app into the dist folder.
 This command uses Webpack to bundle your React and TypeScript code, compiling it into JavaScript and preparing it for use as a Chrome extension.
