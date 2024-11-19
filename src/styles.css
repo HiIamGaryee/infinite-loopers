@@ -10,9 +10,8 @@
   height: 500px;
 }
 
-
 .main-box {
-  @apply bg-white text-2xl border-2 border-gray-300 shadow-sm p-8 overflow-y-auto rounded-xl flex flex-col gap-6 items-center justify-start;
+  @apply bg-white text-2xl border-2 border-gray-300 shadow-sm p-8 overflow-y-auto flex flex-col gap-6 items-center justify-start;
 }
 
 /* Base class for the card */
