@@ -2,7 +2,9 @@ import React from "react";
 
 const ProfilePage = () => {
   return (
-    <div className="min-h-screen text-black p-6">
+    <div className="min-h-screen bg-orange-50  text-black p-6">
+      <h1 className="text-center font-bold text-2xl pt-2">Profile</h1>
+
       <div className="flex items-center mb-6">
         <div className="bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center text-xl font-bold">
           T

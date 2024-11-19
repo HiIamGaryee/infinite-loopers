@@ -3,11 +3,9 @@ import { IconX } from "@tabler/icons-react";
 
 const AboutUsPage = () => {
   return (
-    <div className="min-h-screen text-black p-6">
+    <div className="min-h-screen bg-orange-50  text-black p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold">About</h2>
-      </div>
+      <h1 className="text-center font-bold text-2xl pt-2">About</h1>
 
       {/* Version Info */}
       <div className="mb-6">

@@ -6,6 +6,7 @@ import {
   IconSettings,
   IconArrowBack,
   IconHome,
+  IconGift,
 } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 
@@ -37,6 +38,11 @@ const BurgerMenu = () => {
       label: "About Us",
       icon: <IconInfoCircle className="mr-4" />,
       path: "/about-us",
+    },
+    {
+      label: "Packages",
+      icon: <IconGift className="mr-4" />,
+      path: "/package",
     },
     {
       label: "Settings",
