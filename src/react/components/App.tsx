@@ -17,6 +17,7 @@ const App = () => {
   return (
     <ToneProvider>
       <ToneSuggestionBox />
+
       <AppRouter />
     </ToneProvider>
   );

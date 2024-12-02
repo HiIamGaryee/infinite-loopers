@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from "react";
 
 const SettingsPage = () => {
-  // Using local state initially set by the value in local storage or default to false
-  const [isToneBoxEnabled, setIsToneBoxEnabled] = useState(() => {
-    // Retrieve the state from local storage or default to false if not set
-    const saved = localStorage.getItem("toneBoxEnabled");
-    return saved === "true" ? true : false;
-  });
+  const [isToneBoxEnabled, setIsToneBoxEnabled] = useState(false);
 
-  // Effect to store the state change in local storage whenever it changes
   useEffect(() => {
-    localStorage.setItem("toneBoxEnabled", isToneBoxEnabled.toString());
-  }, [isToneBoxEnabled]);
+    // Retrieve the state from chrome.storage.local
+    chrome.storage.local.get("toneBoxEnabled", (result) => {
+      setIsToneBoxEnabled(result.toneBoxEnabled || false);
+    });
+  }, []);
 
   const toggleToneBox = () => {
-    setIsToneBoxEnabled((prev) => !prev);
+    const newState = !isToneBoxEnabled;
+    setIsToneBoxEnabled(newState);
+    chrome.storage.local.set({ toneBoxEnabled: newState });
+    chrome.tabs.query({}, function (tabs) {
+      tabs.forEach((tab) => {
+        if (typeof tab.id !== "undefined") {
+          chrome.tabs.sendMessage(tab.id, { toneBoxEnabled: newState });
+        }
+      });
+    });
   };
 
   return (
