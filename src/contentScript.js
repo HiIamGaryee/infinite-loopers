@@ -1,105 +1,70 @@
-// // contentScript.js
-// document.body.addEventListener("input", function (event) {
-//   // Check if the event is from an input or textarea element
-//   if (
-//     event.target.tagName.toLowerCase() === "input" ||
-//     event.target.tagName.toLowerCase() === "textarea"
-//   ) {
-//     // Optional: Check if the input type is text-based (not checkbox, radio, etc.)
-//     if (["text", "email", "password"].includes(event.target.type)) {
-//       displaySuggestionBox(event.target);
-//     }
-//   }
-// });
-
-// function displaySuggestionBox(inputElement) {
-//   // Create or reuse an existing suggestion box
-//   let suggestionBox = document.getElementById("tone-suggestion-box");
-//   if (!suggestionBox) {
-//     suggestionBox = document.createElement("div");
-//     suggestionBox.id = "tone-suggestion-box";
-//     suggestionBox.style.position = "absolute";
-//     suggestionBox.style.zIndex = "9999";
-//     suggestionBox.style.backgroundColor = "#fff";
-//     suggestionBox.style.border = "1px solid #ddd";
-//     suggestionBox.style.padding = "10px";
-//     suggestionBox.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
-//     document.body.appendChild(suggestionBox);
-//   }
-
-//   // Position the suggestion box near the input element
-//   const rect = inputElement.getBoundingClientRect();
-//   suggestionBox.style.top = `${window.scrollY + rect.bottom + 5}px`; // 5px below the input
-//   suggestionBox.style.left = `${window.scrollX + rect.left}px`;
-
-//   // Set text and show the box
-//   suggestionBox.textContent =
-//     "Hello, this is a suggestion based on your input!";
-//   suggestionBox.style.display = "block";
-
-//   // Hide the box when the input field is blurred
-//   inputElement.addEventListener("blur", function () {
-//     suggestionBox.style.display = "none";
-//   });
-// }
-
-// contentScript.js
 let isToneBoxEnabled = false;
+console.log("Content script loaded.");
 
-// Listen for messages to toggle the suggestion box state
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+// Listen for messages from the extension (e.g., popup)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.hasOwnProperty("toneBoxEnabled")) {
     isToneBoxEnabled = message.toneBoxEnabled;
     console.log("Tone suggestion state updated to:", isToneBoxEnabled);
-    toggleInputListeners(isToneBoxEnabled);
   }
 });
 
-// Toggle event listeners based on the tone box state
-function toggleInputListeners(enabled) {
-  document.querySelectorAll("input, textarea").forEach((element) => {
-    element.removeEventListener("input", displayToneSuggestionBox);
-    if (enabled) {
-      element.addEventListener("input", displayToneSuggestionBox);
-    }
-  });
-}
+// Event listener for input events
+document.addEventListener("input", (event) => {
+  if (
+    isToneBoxEnabled &&
+    (event.target instanceof HTMLInputElement ||
+      event.target instanceof HTMLTextAreaElement)
+  ) {
+    const userInput = event.target.value;
+    console.log("User input detected:", userInput);
 
-// Function to display a suggestion box near the input element
-function displayToneSuggestionBox(event) {
+    // Send the input to the background script
+    chrome.runtime.sendMessage(
+      { type: "getSuggestion", text: userInput },
+      (response) => {
+        if (response && response.suggestion) {
+          displaySuggestionBox(event.target, response.suggestion);
+        }
+      }
+    );
+  }
+});
+
+function displaySuggestionBox(inputElement, suggestionText) {
   let suggestionBox = document.getElementById("tone-suggestion-box");
+
   if (!suggestionBox) {
     suggestionBox = document.createElement("div");
     suggestionBox.id = "tone-suggestion-box";
-    suggestionBox.style.position = "absolute";
-    suggestionBox.style.zIndex = "9999";
-    suggestionBox.style.backgroundColor = "#fff";
-    suggestionBox.style.border = "1px solid #ddd";
-    suggestionBox.style.padding = "10px";
-    suggestionBox.style.boxShadow = "0 2px 6px rgba(0,0,0,0.1)";
+    suggestionBox.className =
+      "absolute z-50 p-2 bg-white border border-gray-300 shadow-md cursor-pointer max-w-xs break-words"; // Tailwind classes
     document.body.appendChild(suggestionBox);
+
+    // Add click event to replace input content
+    suggestionBox.addEventListener("click", () => {
+      inputElement.value = suggestionText;
+      suggestionBox.style.display = "none";
+    });
   }
 
-  const rect = event.target.getBoundingClientRect();
-  suggestionBox.style.top = `${window.scrollY + rect.bottom + 5}px`; // 5px below the input
-  suggestionBox.style.left = `${window.scrollX + rect.left}px`;
-  suggestionBox.textContent =
-    "Hello, this is a suggestion based on your input!";
+  suggestionBox.textContent = suggestionText;
   suggestionBox.style.display = "block";
 
-  // Hide the box when the input field is blurred
-  event.target.addEventListener("blur", function () {
-    suggestionBox.style.display = "none";
-  });
+  // Positioning logic
+  requestAnimationFrame(() => {
+    const rect = inputElement.getBoundingClientRect();
+    const suggestionBoxHeight = suggestionBox.offsetHeight;
 
-  console.log("Displaying Tone Suggestion Box for:", event.target);
-}
+    // Calculate the position above the input field
+    let topPosition = window.scrollY + rect.top - suggestionBoxHeight - 5; // 5px above the input
 
-// Initial check on DOMContentLoaded to see if the tone box should be enabled
-document.addEventListener("DOMContentLoaded", function () {
-  chrome.storage.local.get(["toneBoxEnabled"], function (result) {
-    if (result.toneBoxEnabled) {
-      toggleInputListeners(true);
+    // Check if there's enough space above; if not, position below
+    if (topPosition < 0) {
+      topPosition = window.scrollY + rect.bottom + 5; // 5px below the input
     }
+
+    suggestionBox.style.top = `${topPosition}px`;
+    suggestionBox.style.left = `${window.scrollX + rect.left}px`;
   });
-});
+}
