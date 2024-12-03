@@ -15,12 +15,13 @@ const SettingsPage = () => {
     flirty: "tunedModels/flirty-qa9368ui2ic9",
     professional: "tunedModels/professionalyf-3rjq5lslrozm",
     neutral: "tunedModels/neutral-empathetic-and-supportive-tone-h",
-    romantic: "tunedModels/romantic-lgq72w26ux7q",
+    romantic: "tunedModels/romantic-1cgshnjn11g2",
   };
   const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/";
   const API_KEY = "AIzaSyBAE4jU_ykSZiHCkbaEhgk_5qtQoecFcIc";
 
   const getSelectedTone = () => localStorage.getItem("tone") || "casual";
+  const tone = getSelectedTone();
 
   useEffect(() => {
     chrome.storage.local.get("toneBoxEnabled", (result) => {
@@ -45,7 +46,6 @@ const SettingsPage = () => {
     if (!userInput.trim()) return;
     setIsLoading(true);
 
-    const tone = getSelectedTone();
     const model = (modelMap as any)[tone];
 
     try {
@@ -100,23 +100,28 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="p-4 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-center">
-        AI Emotional Intelligence Assistant
+    <main className="main-box h-full">
+      <h1 className="text-center font-bold text-2xl">
+        AI Intelligence Assistant Language Features
       </h1>
-      <div className="flex items-center justify-between mb-6">
-        <label htmlFor="tone-toggle" className="text-lg">
+      <div className="flex items-center justify-between gap-4 mb-2 w-full">
+        <label htmlFor="tone-toggle" className="text-sm">
           Enable Tone Suggestions
         </label>
         <input
           id="tone-toggle"
+          className="toggle-switch"
           type="checkbox"
           checked={isToneBoxEnabled}
           onChange={toggleToneBox}
         />
       </div>
-      <div className="mb-4">
-        <label htmlFor="user-input" className="block text-lg mb-2">
+      <div className="flex items-center justify-between gap-4 mb-2 w-full">
+        <p className="text-sm">Tone</p>
+        <p className="text-sm">{tone}</p>
+      </div>
+      <div className="mb-1 w-full">
+        <label htmlFor="user-input" className="block text-sm mb-2">
           Type something:
         </label>
         <div className="flex items-center">
@@ -125,12 +130,12 @@ const SettingsPage = () => {
             type="text"
             value={userInput}
             onChange={handleInputChange}
-            className="flex-grow p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-grow p-3 border text-md border-gray-300 rounded-l-md focus:outline-none h-[50px] focus:ring-blue-500"
           />
           <button
             onClick={generateSuggestion}
             disabled={!isToneBoxEnabled || isLoading}
-            className={`p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-r-md focus:outline-none ${
+            className={`p-3 bg-blue-500 hover:bg-blue-600 h-[50px] text-white rounded-r-md focus:outline-none ${
               !isToneBoxEnabled ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -168,7 +173,7 @@ const SettingsPage = () => {
           Copied to clipboard!
         </div>
       )}
-    </div>
+    </main>
   );
 };
 

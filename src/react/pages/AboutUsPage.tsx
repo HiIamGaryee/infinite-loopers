@@ -42,24 +42,18 @@ const AboutUsPage = () => {
       <div>
         <h3 className="text-lg font-bold mb-4 text-black">Links</h3>
         <div className="space-y-3">
-          <a
-            href="/privacy-policy"
-            className="block text-blue-400 hover:underline"
-          >
+          <a href="/" className="block text-blue-400 hover:underline">
             Privacy Policy
           </a>
-          <a
-            href="/terms-of-use"
-            className="block text-blue-400 hover:underline"
-          >
+          <a href="/" className="block text-blue-400 hover:underline">
             Terms of Use
           </a>
 
           <hr className="border-gray-700 my-4" />
-          <a href="/website" className="block text-blue-400 hover:underline">
+          <a href="/" className="block text-blue-400 hover:underline">
             Visit our Website
           </a>
-          <a href="/contact" className="block text-blue-400 hover:underline">
+          <a href="/" className="block text-blue-400 hover:underline">
             Contact Us
           </a>
         </div>
