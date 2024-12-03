@@ -29,11 +29,11 @@ const BurgerMenu = () => {
       icon: <IconHome className="mr-4" />,
       path: "/",
     },
-    {
-      label: "Profile",
-      icon: <IconUser className="mr-4" />,
-      path: "/profile",
-    },
+    // {
+    //   label: "Profile",
+    //   icon: <IconUser className="mr-4" />,
+    //   path: "/profile",
+    // },
     {
       label: "About Us",
       icon: <IconInfoCircle className="mr-4" />,
