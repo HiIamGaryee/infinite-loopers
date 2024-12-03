@@ -15,7 +15,7 @@ const PackagePage = () => {
         />
         <h3 className="text-xl font-semibold text-center mb-2">Premium Plan</h3>
         <ul className="text-gray-600 text-sm space-y-1 mb-4">
-          <li>✔ 6 Accounts</li>
+          <li>✔ 6 Tone</li>
           <li>✔ Unlimited Access</li>
         </ul>
         <div className="text-center text-2xl font-bold mb-4">
