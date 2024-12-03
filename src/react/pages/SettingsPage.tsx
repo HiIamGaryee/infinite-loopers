@@ -12,25 +12,13 @@ const SettingsPage = () => {
   const modelMap = {
     casual: "tunedModels/casually-5e123ifaah5h",
     formal: "tunedModels/formal-hpfoe9trlpus",
-    flirty: " tunedModels/flirty-qa9368ui2ic9",
+    flirty: "tunedModels/flirty-qa9368ui2ic9",
     professional: "tunedModels/professionalyf-3rjq5lslrozm",
     neutral: "tunedModels/neutral-empathetic-and-supportive-tone-h",
     romantic: "tunedModels/romantic-lgq72w26ux7q",
   };
   const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/";
-  const API_KEY = "AIzaSyC0wzfYcCqvihI6OyNrUpGd7xkMg5swUto";
-
-  // const API_BASE_URL = process.env.REACT_APP_GENERATIVE_LANGUAGE_API;
-  // const API_KEY = process.env.REACT_APP_API_KEY;
-
-  // const modelMap = {
-  //   casual: process.env.REACT_APP_TUNED_MODEL_CASUALLY,
-  //   formal: process.env.REACT_APP_TUNED_MODEL_FORMAL,
-  //   flirty: process.env.REACT_APP_TUNED_MODEL_FLIRTY,
-  //   professional: process.env.REACT_APP_TUNED_MODEL_PROFESSIONAL,
-  //   neutral: process.env.REACT_APP_TUNED_MODEL_NEUTRAL,
-  //   romantic: process.env.REACT_APP_TUNED_MODEL_ROMANTIC,
-  // };
+  const API_KEY = "AIzaSyBAE4jU_ykSZiHCkbaEhgk_5qtQoecFcIc";
 
   const getSelectedTone = () => localStorage.getItem("tone") || "casual";
 
@@ -58,7 +46,7 @@ const SettingsPage = () => {
     setIsLoading(true);
 
     const tone = getSelectedTone();
-    const model = modelMap[tone];
+    const model = (modelMap as any)[tone];
 
     try {
       const response = await fetch(
@@ -69,7 +57,15 @@ const SettingsPage = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            prompt: userInput,
+            contents: [
+              {
+                parts: [
+                  {
+                    text: userInput,
+                  },
+                ],
+              },
+            ],
           }),
         }
       );
@@ -79,7 +75,10 @@ const SettingsPage = () => {
       }
 
       const data = await response.json();
-      setSuggestionText(data.generatedText || "No suggestion generated.");
+      setSuggestionText(
+        data.candidates?.[0]?.content?.parts?.[0]?.text ||
+          "No suggestion generated. Try again!"
+      );
     } catch (error) {
       console.error("Error generating suggestion:", error);
       setSuggestionText("Error generating suggestion. Please try again.");

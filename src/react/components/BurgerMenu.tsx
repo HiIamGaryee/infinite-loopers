@@ -45,7 +45,7 @@ const BurgerMenu = () => {
       path: "/package",
     },
     {
-      label: "Settings",
+      label: "Features",
       icon: <IconSettings className="mr-4" />,
       path: "/settings",
     },
