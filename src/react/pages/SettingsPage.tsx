@@ -130,7 +130,7 @@ const SettingsPage = () => {
             type="text"
             value={userInput}
             onChange={handleInputChange}
-            className="flex-grow p-3 border text-md border-gray-300 rounded-l-md focus:outline-none h-[50px] focus:ring-blue-500"
+            className="flex-grow p-3 border text-xs border-gray-300 rounded-l-md focus:outline-none h-[50px] focus:ring-blue-500"
           />
           <button
             onClick={generateSuggestion}
