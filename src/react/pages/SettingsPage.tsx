@@ -7,7 +7,32 @@ const SettingsPage = () => {
   const [userInput, setUserInput] = useState("");
   const [suggestionText, setSuggestionText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [showCopiedMessage, setShowCopiedMessage] = useState(false); // For copied animation
+  const [showCopiedMessage, setShowCopiedMessage] = useState(false);
+
+  const modelMap = {
+    casual: "tunedModels/casually-5e123ifaah5h",
+    formal: "tunedModels/formal-hpfoe9trlpus",
+    flirty: " tunedModels/flirty-qa9368ui2ic9",
+    professional: "tunedModels/professionalyf-3rjq5lslrozm",
+    neutral: "tunedModels/neutral-empathetic-and-supportive-tone-h",
+    romantic: "tunedModels/romantic-lgq72w26ux7q",
+  };
+  const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/";
+  const API_KEY = "AIzaSyC0wzfYcCqvihI6OyNrUpGd7xkMg5swUto";
+
+  // const API_BASE_URL = process.env.REACT_APP_GENERATIVE_LANGUAGE_API;
+  // const API_KEY = process.env.REACT_APP_API_KEY;
+
+  // const modelMap = {
+  //   casual: process.env.REACT_APP_TUNED_MODEL_CASUALLY,
+  //   formal: process.env.REACT_APP_TUNED_MODEL_FORMAL,
+  //   flirty: process.env.REACT_APP_TUNED_MODEL_FLIRTY,
+  //   professional: process.env.REACT_APP_TUNED_MODEL_PROFESSIONAL,
+  //   neutral: process.env.REACT_APP_TUNED_MODEL_NEUTRAL,
+  //   romantic: process.env.REACT_APP_TUNED_MODEL_ROMANTIC,
+  // };
+
+  const getSelectedTone = () => localStorage.getItem("tone") || "casual";
 
   useEffect(() => {
     chrome.storage.local.get("toneBoxEnabled", (result) => {
@@ -22,52 +47,52 @@ const SettingsPage = () => {
     chrome.storage.local.set({ toneBoxEnabled: newState }, () => {
       console.log("Tone box enabled state is set to:", newState);
     });
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach((tab) => {
-        if (tab.id) {
-          chrome.tabs.sendMessage(
-            tab.id,
-            { toneBoxEnabled: newState },
-            (response) => {
-              if (chrome.runtime.lastError) {
-                console.error(
-                  "Error sending message to tab:",
-                  tab.id,
-                  chrome.runtime.lastError
-                );
-              } else {
-                console.log("Message sent to tab:", tab.id);
-              }
-            }
-          );
-        }
-      });
-    });
   };
 
-  const handleInputChange = (event: any) => {
-    const inputText = event.target.value;
-    setUserInput(inputText);
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(event.target.value);
   };
 
-  const generateSuggestion = () => {
+  const generateSuggestion = async () => {
     if (!userInput.trim()) return;
     setIsLoading(true);
 
-    setTimeout(() => {
-      const suggestion = "Hello, this is a suggestion based on your input!";
-      setSuggestionText(suggestion);
-      console.log("Suggestion generated:", suggestion);
+    const tone = getSelectedTone();
+    const model = modelMap[tone];
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}${model}:generateContent?key=${API_KEY}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: userInput,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setSuggestionText(data.generatedText || "No suggestion generated.");
+    } catch (error) {
+      console.error("Error generating suggestion:", error);
+      setSuggestionText("Error generating suggestion. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(suggestionText).then(
       () => {
-        console.log("Suggestion copied to clipboard");
-        setShowCopiedMessage(false); // Reset animation
-        setTimeout(() => setShowCopiedMessage(true), 50); // Trigger animation
+        setShowCopiedMessage(false);
+        setTimeout(() => setShowCopiedMessage(true), 50);
       },
       (err) => {
         console.error("Could not copy text: ", err);
@@ -86,7 +111,6 @@ const SettingsPage = () => {
         </label>
         <input
           id="tone-toggle"
-          className="toggle-switch"
           type="checkbox"
           checked={isToneBoxEnabled}
           onChange={toggleToneBox}
@@ -112,7 +136,7 @@ const SettingsPage = () => {
             }`}
           >
             {isLoading ? (
-              <IconLoader className="h-5 w-5" />
+              <IconLoader className="h-5 w-5 animate-spin" />
             ) : (
               <IconSend className="h-5 w-5" />
             )}
