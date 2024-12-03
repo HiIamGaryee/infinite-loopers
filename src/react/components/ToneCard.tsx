@@ -26,7 +26,7 @@ const toneCards = [
     isLock: 0,
   },
   {
-    colorClass: "tone-card-green",
+    colorClass: "tone-card-purple",
     text: "Friendly",
     code: "friendly",
     icon: <IconPacman />,
@@ -41,7 +41,7 @@ const toneCards = [
     isLock: 0,
   },
   {
-    colorClass: "tone-card-purple",
+    colorClass: "tone-card-green",
     text: "Professional",
     code: "professional",
     icon: <IconTie />,
