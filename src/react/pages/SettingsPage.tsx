@@ -10,15 +10,16 @@ const SettingsPage = () => {
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
   const modelMap = {
-    casual: "tunedModels/casually-5e123ifaah5h",
-    formal: "tunedModels/formal-hpfoe9trlpus",
-    flirty: "tunedModels/flirty-qa9368ui2ic9",
-    professional: "tunedModels/professionalyf-3rjq5lslrozm",
-    neutral: "tunedModels/neutral-empathetic-and-supportive-tone-h",
-    romantic: "tunedModels/romantic-1cgshnjn11g2",
+    casual: process.env.APP_TUNED_MODEL_CASUAL,
+    formal: process.env.APP_TUNED_MODEL_FORMAL,
+    flirty: process.env.APP_TUNED_MODEL_FLIRTY,
+    professional: process.env.APP_TUNED_MODEL_PROFESSIONAL,
+    neutral: process.env.APP_TUNED_MODEL_NEUTRAL,
+    romantic: process.env.APP_TUNED_MODEL_ROMANTIC,
   };
-  const API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/";
-  const API_KEY = "AIzaSyBAE4jU_ykSZiHCkbaEhgk_5qtQoecFcIc";
+
+  const API_BASE_URL = process.env.API_BASE_URL;
+  const API_KEY = process.env.APP_API_KEY;
 
   const getSelectedTone = () => localStorage.getItem("tone") || "casual";
   const tone = getSelectedTone();
@@ -26,7 +27,7 @@ const SettingsPage = () => {
   useEffect(() => {
     chrome.storage.local.get("toneBoxEnabled", (result) => {
       setIsToneBoxEnabled(result.toneBoxEnabled || false);
-      console.log("Initial toneBoxEnabled state:", result.toneBoxEnabled);
+      // console.log("Initial toneBoxEnabled state:", result.toneBoxEnabled);
     });
   }, []);
 
@@ -34,7 +35,7 @@ const SettingsPage = () => {
     const newState = !isToneBoxEnabled;
     setIsToneBoxEnabled(newState);
     chrome.storage.local.set({ toneBoxEnabled: newState }, () => {
-      console.log("Tone box enabled state is set to:", newState);
+      // console.log("Tone box enabled state is set to:", newState);
     });
   };
 
