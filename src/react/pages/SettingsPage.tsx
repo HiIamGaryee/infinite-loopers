@@ -10,14 +10,15 @@ const SettingsPage = () => {
   const [showCopiedMessage, setShowCopiedMessage] = useState(false);
 
   const modelMap = {
-    casual: process.env.APP_TUNED_MODEL_CASUAL,
-    formal: process.env.APP_TUNED_MODEL_FORMAL,
-    flirty: process.env.APP_TUNED_MODEL_FLIRTY,
-    professional: process.env.APP_TUNED_MODEL_PROFESSIONAL,
-    neutral: process.env.APP_TUNED_MODEL_NEUTRAL,
-    romantic: process.env.APP_TUNED_MODEL_ROMANTIC,
+    casual: "tunedModels/casually-5e123ifaah5h",
+    formal: "tunedModels/formal-hpfoe9trlpus",
+    flirty: "tunedModels/flirty-qa9368ui2ic9",
+    professional: "tunedModels/professionalyf-3rjq5lslrozm",
+    neutral: "tunedModels/neutral-empathetic-and-supportive-tone-h",
+    romantic: "tunedModels/romantic-1cgshnjn11g2",
   };
 
+  console.log(process.env.APP_TUNED_MODEL_CASUAL!);
   const API_BASE_URL = process.env.API_BASE_URL;
   const API_KEY = process.env.APP_API_KEY;
 
@@ -149,7 +150,7 @@ const SettingsPage = () => {
         </div>
       </div>
       {suggestionText && (
-        <div className="mb-6">
+        <div className="mb-6 w-full">
           <table className="min-w-full bg-white border rounded-md">
             <tbody>
               <tr>
