@@ -26,12 +26,13 @@ const toneCards = [
     isLock: 0,
   },
   {
-    colorClass: "tone-card-pink",
-    text: "Romantic",
-    code: "romantic",
-    icon: <IconHearts />,
+    colorClass: "tone-card-green",
+    text: "Friendly",
+    code: "friendly",
+    icon: <IconPacman />,
     isLock: 0,
   },
+
   {
     colorClass: "tone-card-blue",
     text: "Doggie",
@@ -47,10 +48,10 @@ const toneCards = [
     isLock: 1,
   },
   {
-    colorClass: "tone-card-green",
-    text: "Friendly",
-    code: "friendly",
-    icon: <IconPacman />,
+    colorClass: "tone-card-pink",
+    text: "Romantic",
+    code: "romantic",
+    icon: <IconHearts />,
     isLock: 1,
   },
 ];
