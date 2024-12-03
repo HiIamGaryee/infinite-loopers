@@ -1,15 +1,42 @@
 let isToneBoxEnabled = false;
+
 console.log("Content script loaded.");
 
-// Listen for messages from the extension (e.g., popup)
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.hasOwnProperty("toneBoxEnabled")) {
-    isToneBoxEnabled = message.toneBoxEnabled;
-    console.log("Tone suggestion state updated to:", isToneBoxEnabled);
+// Update state based on messages from background/popup
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === "toggleToneBox") {
+    isToneBoxEnabled = message.enabled;
+    console.log("Tone box state updated:", isToneBoxEnabled);
   }
 });
 
-// Event listener for input events
+// Listen for focus events on input/textarea fields
+document.addEventListener(
+  "focus",
+  (event) => {
+    if (
+      isToneBoxEnabled &&
+      (event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement)
+    ) {
+      console.log("Input field focused:", event.target);
+
+      // Optional: Handle initial suggestion on focus if needed
+      const userInput = event.target.value;
+      chrome.runtime.sendMessage(
+        { type: "getSuggestion", text: userInput },
+        (response) => {
+          if (response?.suggestion) {
+            displaySuggestionBox(event.target, response.suggestion);
+          }
+        }
+      );
+    }
+  },
+  true
+); // Use capture phase to ensure focus events are caught
+
+// Listen for input events on text fields
 document.addEventListener("input", (event) => {
   if (
     isToneBoxEnabled &&
@@ -17,13 +44,12 @@ document.addEventListener("input", (event) => {
       event.target instanceof HTMLTextAreaElement)
   ) {
     const userInput = event.target.value;
-    console.log("User input detected:", userInput);
 
-    // Send the input to the background script
+    // Send input to background for processing
     chrome.runtime.sendMessage(
       { type: "getSuggestion", text: userInput },
       (response) => {
-        if (response && response.suggestion) {
+        if (response?.suggestion) {
           displaySuggestionBox(event.target, response.suggestion);
         }
       }
@@ -34,37 +60,25 @@ document.addEventListener("input", (event) => {
 function displaySuggestionBox(inputElement, suggestionText) {
   let suggestionBox = document.getElementById("tone-suggestion-box");
 
-  if (!suggestionBox) {
-    suggestionBox = document.createElement("div");
-    suggestionBox.id = "tone-suggestion-box";
-    suggestionBox.className =
-      "absolute z-50 p-2 bg-white border border-gray-300 shadow-md cursor-pointer max-w-xs break-words"; // Tailwind classes
-    document.body.appendChild(suggestionBox);
+  // Remove existing suggestion box
+  if (suggestionBox) suggestionBox.remove();
 
-    // Add click event to replace input content
-    suggestionBox.addEventListener("click", () => {
-      inputElement.value = suggestionText;
-      suggestionBox.style.display = "none";
-    });
-  }
-
+  // Create a new suggestion box
+  suggestionBox = document.createElement("div");
+  suggestionBox.id = "tone-suggestion-box";
   suggestionBox.textContent = suggestionText;
-  suggestionBox.style.display = "block";
+  suggestionBox.className = "tone-suggestion-box"; // Tailwind for styling
+  document.body.appendChild(suggestionBox);
 
-  // Positioning logic
-  requestAnimationFrame(() => {
-    const rect = inputElement.getBoundingClientRect();
-    const suggestionBoxHeight = suggestionBox.offsetHeight;
+  // Position the suggestion box
+  const rect = inputElement.getBoundingClientRect();
+  suggestionBox.style.position = "absolute";
+  suggestionBox.style.top = `${window.scrollY + rect.bottom + 5}px`;
+  suggestionBox.style.left = `${window.scrollX + rect.left}px`;
 
-    // Calculate the position above the input field
-    let topPosition = window.scrollY + rect.top - suggestionBoxHeight - 5; // 5px above the input
-
-    // Check if there's enough space above; if not, position below
-    if (topPosition < 0) {
-      topPosition = window.scrollY + rect.bottom + 5; // 5px below the input
-    }
-
-    suggestionBox.style.top = `${topPosition}px`;
-    suggestionBox.style.left = `${window.scrollX + rect.left}px`;
+  // Replace input text when suggestion is clicked
+  suggestionBox.addEventListener("click", () => {
+    inputElement.value = suggestionText;
+    suggestionBox.remove();
   });
 }

@@ -2,21 +2,24 @@
   "manifest_version": 3,
   "name": "AI Emotional Intelligence Assistant Language",
   "description": "AI Emotional Intelligence Assistant Language",
-  "permissions": ["activeTab", "scripting", "storage"],
   "version": "1.0.0",
+  "permissions": ["storage", "scripting", "activeTab", "tabs"],
+  "host_permissions": ["*://*/*"],
   "action": {
     "default_popup": "index.html"
   },
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": ["<all_urls>"],
   "content_scripts": [
-    { "matches": ["<all_urls>"], "js": ["contentScript.js"] }
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["*.html", "*.js", "*.css", "*.png", "*.svg"],
+      "resources": ["contentTailwind.css"],
       "matches": ["<all_urls>"]
     }
   ]

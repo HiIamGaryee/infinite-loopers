@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   IconBeach,
   IconDog,
@@ -8,7 +8,7 @@ import {
   IconPacman,
   IconLockPassword,
 } from "@tabler/icons-react";
-import { IconCircleCheck } from "@tabler/icons-react"; // Importing the icon for selection
+import { IconCircleCheck } from "@tabler/icons-react";
 
 const toneCards = [
   {
@@ -55,14 +55,20 @@ const toneCards = [
   },
 ];
 
-export const ToneCard = () => {
-  const [selected, setSelected] = useState(0); // Default selection to the first card
+const ToneCard: React.FC = () => {
+  const [selected, setSelected] = useState<string | null>(null);
 
-  const handleSelect = (index: number) => {
-    if (toneCards[index].isLock === 0) {
-      setSelected(index);
-      const selectedCode = toneCards[index].code; // Using the new `code` property
-      localStorage.setItem("tone", selectedCode); // Storing the selected tone code in local storage
+  useEffect(() => {
+    const storedTone = localStorage.getItem("tone");
+    if (storedTone) {
+      setSelected(storedTone);
+    }
+  }, []);
+
+  const handleSelect = (code: string, isLock: number) => {
+    if (isLock === 0) {
+      setSelected(code);
+      localStorage.setItem("tone", code);
     }
   };
 
@@ -74,13 +80,13 @@ export const ToneCard = () => {
           className={`relative ${
             card.isLock === 1 ? "cursor-default" : "cursor-pointer"
           } tone-card ${card.colorClass}`}
-          onClick={() => handleSelect(index)}
+          onClick={() => handleSelect(card.code, card.isLock)}
         >
           <div
             className={`icon mb-2 text-4xl ${
               card.isLock === 1
                 ? "text-slate-400"
-                : index === selected
+                : selected === card.code
                 ? "text-green-500"
                 : "text-white"
             }`}
@@ -92,14 +98,14 @@ export const ToneCard = () => {
               className={
                 card.isLock === 1
                   ? "text-slate-400"
-                  : index === selected
+                  : selected === card.code
                   ? "text-green-500"
                   : "text-white"
               }
             >
               {card.text}
             </p>
-            {card.isLock === 0 && index === selected && (
+            {card.isLock === 0 && selected === card.code && (
               <IconCircleCheck
                 size={20}
                 color="#22c55e"
@@ -117,3 +123,5 @@ export const ToneCard = () => {
     </div>
   );
 };
+
+export default ToneCard;

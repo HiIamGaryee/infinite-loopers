@@ -111,3 +111,14 @@
   max-width: 300px;
   word-wrap: break-word;
 }
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.animate-fade-out {
+  animation: fade-out 2s ease-in forwards;
+}

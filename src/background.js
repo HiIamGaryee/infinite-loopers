@@ -1,33 +1,26 @@
-// background.js
+chrome.runtime.onInstalled.addListener(() => {
+  console.log("Extension installed.");
+});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === "getSuggestion") {
-    // Placeholder for API call
-    const userInput = request.text;
-    console.log("Received input:", userInput);
-
-    // Simulate API response
-    const suggestion = "Hello, this is a suggestion based on your input!";
-    sendResponse({ suggestion });
-
-    // If making an actual API call, use fetch:
-    /*
-      fetch("https://your-api-endpoint.com/suggest", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ text: userInput })
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          sendResponse({ suggestion: data.suggestion });
-        })
-        .catch((error) => {
-          console.error("API error:", error);
-          sendResponse({ suggestion: "" });
-        });
-      return true; // Keep the messaging channel open for sendResponse
-      */
+  if (request.type === "broadcastMessage") {
+    // Forward the message to all tabs
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        if (tab.id) {
+          chrome.tabs.sendMessage(tab.id, request.message, (response) => {
+            if (chrome.runtime.lastError) {
+              console.error(
+                `Error in tab ${tab.id}:`,
+                chrome.runtime.lastError
+              );
+            } else {
+              console.log(`Response from tab ${tab.id}:`, response);
+            }
+          });
+        }
+      });
+    });
+    sendResponse({ status: "broadcast sent" });
   }
 });

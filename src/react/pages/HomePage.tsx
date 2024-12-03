@@ -1,5 +1,5 @@
 import React from "react";
-import { ToneCard } from "../components/ToneCard";
+import ToneCard from "../components/ToneCard";
 
 const HomePage = () => {
   return (
