@@ -1,5 +1,5 @@
 import React from "react";
-import { IconX } from "@tabler/icons-react";
+import logo from "../assets/logo.png";
 
 const AboutUsPage = () => {
   return (
@@ -42,21 +42,24 @@ const AboutUsPage = () => {
       <div>
         <h3 className="text-lg font-bold mb-4 text-black">Links</h3>
         <div className="space-y-3">
-          <a href="/" className="block text-blue-400 hover:underline">
+          <p className="block cursor-pointer text-xs text-blue-400 hover:underline">
             Privacy Policy
-          </a>
-          <a href="/" className="block text-blue-400 hover:underline">
+          </p>
+          <p className="block cursor-pointer text-xs text-blue-400 hover:underline">
             Terms of Use
-          </a>
+          </p>
 
-          <hr className="border-gray-700 my-4" />
-          <a href="/" className="block text-blue-400 hover:underline">
+          <p className="block cursor-pointer text-xs text-blue-400 hover:underline">
             Visit our Website
-          </a>
-          <a href="/" className="block text-blue-400 hover:underline">
+          </p>
+          <p className="block cursor-pointer text-xs text-blue-400 hover:underline">
             Contact Us
-          </a>
+          </p>
         </div>
+      </div>
+      <div className="my-6">
+        <h3 className="text-lg font-bold text-black">Created by</h3>
+        <img src={logo} alt="Logo" className="h-16 w-auto mx-auto" />
       </div>
     </div>
   );
