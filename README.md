@@ -3,7 +3,7 @@
 AI Emotional Intelligence Assistant Chrome Extension by ---> Team Infinite Loopers
 This project was created by React and Chrome’s built-in AI APIs and models, including Gemini Nano. \
 🔗 : coming soon \
-Demo: coming soon
+Demo: https://youtu.be/cb--SMccq-Y
 
 ## Available Scripts
 
