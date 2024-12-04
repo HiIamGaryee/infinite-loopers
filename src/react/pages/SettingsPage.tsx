@@ -13,12 +13,11 @@ const SettingsPage = () => {
     casual: "tunedModels/casually-5e123ifaah5h",
     formal: "tunedModels/formal-hpfoe9trlpus",
     flirty: "tunedModels/flirty-qa9368ui2ic9",
-    professional: "tunedModels/professionalyf-3rjq5lslrozm",
+    professional: "tunedModels/professionalyf-ofcx0kv31ol",
     neutral: "tunedModels/neutral-empathetic-and-supportive-tone-h",
-    romantic: "tunedModels/romantic-1cgshnjn11g2",
+    romantic: "tunedModels/romantic-97msqn7io364",
   };
 
-  console.log(process.env.APP_TUNED_MODEL_CASUAL!);
   const API_BASE_URL = process.env.API_BASE_URL;
   const API_KEY = process.env.APP_API_KEY;
 
