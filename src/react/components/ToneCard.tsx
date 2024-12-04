@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   IconBeach,
-  IconDog,
+  IconMoodHeart,
   IconHearts,
   IconPrinter,
   IconTie,
@@ -35,9 +35,9 @@ const toneCards = [
 
   {
     colorClass: "tone-card-blue",
-    text: "Doggie",
+    text: "Neutral",
     code: "doggie",
-    icon: <IconDog />,
+    icon: <IconMoodHeart />,
     isLock: 0,
   },
   {
